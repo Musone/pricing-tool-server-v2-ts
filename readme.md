@@ -1,0 +1,1 @@
+This is the Pricing-Tool server version 2.1. It is using TS, express, mongoDB, typegoose and Zod.
