@@ -37,9 +37,9 @@ export const putCounselorSchema = object({
             (data) => specializationsConstants.includes(data)
         ))),
         specializationDesc: optional(string()),
-        approach: optional(string().refine(
+        approach: optional(array(string().refine(
             (data) => approachesConstants.includes(data)
-        )),
+        ))),
         approachDesc: optional(string()),
         credentials: optional(array(string().refine(
             (data) => credentialsConstants.includes(data)

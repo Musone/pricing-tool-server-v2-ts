@@ -12,6 +12,10 @@ const languagesConstants = [
     "Punjabi",
     "Serbian",
     "Spanish",
+    "German",
+    "Swedish",
+    "Italian",
+    "Danish",
 ];
 
 export default languagesConstants;

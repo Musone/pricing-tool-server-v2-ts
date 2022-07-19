@@ -1,16 +1,20 @@
-import express from "express";
+import express, {Request, NextFunction, Response} from "express";
 import validateResource from "../middleware/validateResource";
-import {getCounselorsHandler, putCounselorHandler} from "../controller/counselor.controller";
+import {
+    getCounselorsHandler,
+    getMyCounselorProfileHandler,
+    putCounselorHandler
+} from "../controller/counselor.controller";
 import requireUser from "../middleware/requireUser";
-import requireUserIsCounselorOrAdmin from "../middleware/requireUserIsCounselorOrAdmin";
+import requireUserIsTheCounselorOrAdmin from "../middleware/requireUserIsTheCounselorOrAdmin";
 import {putCounselorSchema} from "../schema/counselor.schema";
-
+import requireUserIsCounselor from "../middleware/requireUserIsCounselor";
+import uploadPfp from "../utils/uploadPfp";
 
 const router = express.Router();
 
 router.get('/api/counselors', getCounselorsHandler);
-// router.get('/api/counselors/:id', validateResource(queryCounselorsSchema), queryCounserlorsHandler);
-router.put('/api/counselors/:id', requireUser, requireUserIsCounselorOrAdmin, validateResource(putCounselorSchema), putCounselorHandler);
-// router.put('/api/counselors/?hello', requireUser, /*, validateResource(____)*/ requireUserIsCounselorOrAdmin, putCounselorHandler);
+router.get('/api/counselors/me', requireUser, requireUserIsCounselor, getMyCounselorProfileHandler);
+router.put('/api/counselors/:id', requireUser, requireUserIsTheCounselorOrAdmin, validateResource(putCounselorSchema), uploadPfp, putCounselorHandler);
 
 export default router;

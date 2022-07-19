@@ -2,7 +2,7 @@ import {privateFields, User} from "../model/user.model";
 import {DocumentType} from "@typegoose/typegoose";
 import {omit} from 'lodash';
 import {signJwt, verifyJwt} from "../utils/jwt";
-import SessionModel from "../model/session.model";
+import SessionModel, {Session} from "../model/session.model";
 import config from "config";
 import {findUserById} from "./user.service";
 
@@ -41,4 +41,20 @@ export async function refreshAccessToken(refreshToken: string) {
     if (!user) return null;
 
     return signAccessToken(user);
+}
+
+export async function findSessionByRefreshToken(refreshToken: string) {
+    const decoded = verifyJwt<{session: string}>(refreshToken, 'refreshTokenPublicKey');
+
+    if (!decoded) return null;
+
+    const session: DocumentType<Session> | null = await findSessionById(decoded.session);
+
+    if (session === null) return null;
+
+    return session;
+}
+
+export async function deleteSessionById(id: string) {
+    return SessionModel.deleteOne({_id: id});
 }

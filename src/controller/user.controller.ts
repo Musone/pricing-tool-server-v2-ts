@@ -10,10 +10,10 @@ import {createUser, findUserByEmail, findUserById} from "../service/user.service
 import sendEmail from "../utils/mailer";
 import log from "../utils/logger";
 import {nanoid} from "nanoid";
-import Role from "../constants/userRoles.constants";
 import UserModel, {User} from "../model/user.model";
 import {DocumentType} from "@typegoose/typegoose";
-import updateObject from "../utils/UpdateObject";
+import updateAndAddToObject from "../utils/UpdateAndAddToObject";
+import config from "config";
 
 
 export async function putUserHandler(req: Request<PutUserInput['params'], {}, PutUserInput['body']>, res: Response) {
@@ -21,17 +21,28 @@ export async function putUserHandler(req: Request<PutUserInput['params'], {}, Pu
     const input = req.body/*as Partial<User>*/;
     const user: DocumentType<User> | null = await UserModel.findById(id);
 
-    if (!user) return res.status(400).send('Could update user');
+    if (!user) return res.status(400).send('Could not update user');
 
-    updateObject(input, user);
+    updateAndAddToObject(input, user);
 
-    await user.save();
+    try {
+        await user.save();
+    } catch (e: any) {
+        // log.error(e);
+
+        if (e.code === 11000) {
+            return res.status(409).send('Email taken')
+        } else {
+            return res.sendStatus(400);
+        }
+    }
 
     return res.send('User roles successfully updated');
 }
 
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
     const body: CreateUserInput = req.body;
+    const clientUrl = config.get<string>('clientUrl');
 
     try {
         const user = await createUser(body);
@@ -40,7 +51,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
             from: 'admin@server.com',
             to: user.email,
             subject: 'Please verify your account',
-            text: `Verification code: \n${user.verificationCode}\n\n Id: ${user._id}`
+            text: `${clientUrl}/auth/verify?id=${user._id}&code=${user.verificationCode}`,
         });
 
         return res.send('User successfully created');
@@ -57,7 +68,7 @@ export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Resp
 
     const user = await findUserById(id);
 
-    if (!user) return res.send('Could not verify user');
+    if (!user) return res.status(401).send('Could not verify user');
 
     if (user.verified) return res.send('User is already verified');
 
@@ -67,20 +78,21 @@ export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Resp
         return res.send('User successfully verified');
     }
 
-    return res.send('Verification code invalid');
+    return res.status(401).send('Verification code invalid');
 }
 
 export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordInput>, res: Response) {
     const {email} = req.body;
     const message = 'A reset email has been sent';
     const user = await findUserByEmail(email);
+    const clientUrl = config.get<string>('clientUrl');
 
     if (!user) {
         log.debug(`User with email ${email} does not exist`);
         return res.send(message);
     }
 
-    if (!user.verified) return res.send('User is not verified');
+    if (!user.verified) return res.send(message);
 
     user.passwordResetCode = nanoid();
 
@@ -90,7 +102,7 @@ export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordI
         from: 'admin@server.com',
         to: user.email,
         subject: 'Password reset',
-        text: `Password reset code: \n${user.passwordResetCode}\n\n Id: ${user._id}`
+        text: `${clientUrl}/auth/forgotPassword?id=${user._id}&code=${user.passwordResetCode}`
     });
 
     return res.send(message);

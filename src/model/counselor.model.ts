@@ -33,31 +33,31 @@ export class Counselor {
     @prop({default: null})
     in_person: {city: string, province: string} | null;
 
-    @prop({default: [], required: true})
+    @prop({default: []})
     languages: string[];
 
-    @prop({default: [], required: true})
+    @prop({default: []})
     specializations: string[];
 
-    @prop({default: '', required: true})
+    @prop({default: ''})
     specializationDesc: string;
 
-    @prop({default: '', required: true})
-    approach: string;
+    @prop({default: []})
+    approach: string[];
 
-    @prop({default: '', required: true})
+    @prop({default: ''})
     approachDesc: string;
 
-    @prop({default: [], required: true})
+    @prop({default: []})
     credentials: string[];
 
     @prop()
     pfp: string;
 
-    @prop({default: '', required: true})
+    @prop({default: ''})
     descriptionLong: string;
 
-    @prop({default: '', required: true})
+    @prop({default: ''})
     introduction: string;
 
     @prop({default: null})
