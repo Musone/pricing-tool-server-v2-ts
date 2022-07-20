@@ -9,7 +9,7 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "start": "node dist/src/app.js",
-    "postinstall": "tsc",
+    "postinstall": "yarn build",
     "watch-node": "nodemon dist/src/app.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
