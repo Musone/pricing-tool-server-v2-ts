@@ -1,5 +1,5 @@
 module.exports = {
-    port: 1337,
+    port: process.env.PORT,
 
     // ~~ Gmail ~~
     dbUri: 'mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority',
