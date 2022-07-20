@@ -1,5 +1,7 @@
-export default {
+module.exports = {
     port: 8080,
+
+    // ~~ Gmail ~~
     dbUri: 'mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority',
     smtp: {
         service: 'gmail',
@@ -7,8 +9,11 @@ export default {
         pass: process.env.PASS,
         host: 'smtp.gmail.com',
         port: 465,
-        secure: false
+        secure: false,
     },
+    // ~~~~
+
+    // ~~ Heroku ~~
     logLevel: 'info',
     accessTokenPrivateKey: '',
     accessTokenPublicKey: '',
@@ -18,5 +23,6 @@ export default {
     refreshTokenTTL: '1y',
     invalidLoginMessage: 'Invalid email or password',
     clientUrl: 'https://phare-counselor-finding-tool.herokuapp.com',
-    uploadLocation: 'uploads/'
+    uploadLocation: 'uploads/',
+    // ~~~~
 }

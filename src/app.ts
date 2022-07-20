@@ -6,7 +6,6 @@ import log from "./utils/logger";
 import router from './routes';
 import deserializeUser from "./middleware/deserializeUser";
 import cors from 'cors';
-// import bodyParser from 'body-parser';
 
 const app = express();
 const port = config.get('port');

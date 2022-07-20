@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     port: 5000,
 
     // ~~ Ethermail (fake email) ~~
