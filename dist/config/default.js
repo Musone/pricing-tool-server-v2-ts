@@ -1,6 +1,7 @@
-export default {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
     port: 5000,
-
     // ~~ Gmail ~~
     dbUri: 'mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority',
     smtp: {
@@ -12,7 +13,6 @@ export default {
         secure: false,
     },
     // ~~~~
-
     // ~~ Heroku ~~
     logLevel: 'info',
     accessTokenPrivateKey: '',
@@ -25,4 +25,4 @@ export default {
     clientUrl: 'https://phare-counselor-finding-tool.herokuapp.com',
     uploadLocation: 'uploads/',
     // ~~~~
-}
+};

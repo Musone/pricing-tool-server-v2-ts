@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "z": "ts-node-dev --transpile-only src/testPlayground.ts",
     "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "deploy": "yarn build && git add . && git commit -m Heroku && git push heroku master"
   },
   "devDependencies": {
     "@types/config": "^0.0.41",
