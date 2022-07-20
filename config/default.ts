@@ -1,5 +1,6 @@
 export default {
-    port: 5000,
+    // port: 5000,
+    port: 8080,
 
     // ~~ Gmail ~~
     dbUri: 'mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority',
