@@ -1,19 +1,18 @@
 export default {
     port: 5000,
 
-    // ~~ Gmail ~~
-    dbUri: 'mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority',
+    // ~~ Ethermail (fake email) ~~
+    dbUri: 'mongodb://localhost:27017/pricing-tool-local',
     smtp: {
-        service: 'gmail',
-        user: process.env.USER,
-        pass: process.env.PASS,
-        host: 'smtp.gmail.com',
-        port: 465,
+        service: 'ethermail',
+        user: 'ygx6wvan5es3a4rd@ethereal.email',
+        pass: 'q8SJwBM4NK537CMB1W',
+        host: 'smtp.ethereal.email',
+        port: 587,
         secure: false,
     },
     // ~~~~
 
-    // ~~ Local ~~
     logLevel: 'info',
     accessTokenPrivateKey: '',
     accessTokenPublicKey: '',
@@ -24,5 +23,4 @@ export default {
     invalidLoginMessage: 'Invalid email or password',
     clientUrl: 'http://192.168.1.8:3000',
     uploadLocation: 'uploads/',
-    // ~~~~
 }

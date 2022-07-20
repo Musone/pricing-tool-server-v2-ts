@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "z": "ts-node-dev --transpile-only src/testPlayground.ts"
+    "z": "ts-node-dev --transpile-only src/testPlayground.ts",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
   },
   "devDependencies": {
     "@types/config": "^0.0.41",
