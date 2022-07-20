@@ -8,7 +8,14 @@
     "z": "ts-node-dev --transpile-only src/testPlayground.ts",
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "deploy": "yarn build && git add . && git commit -m Heroku && git push heroku master"
+    "start": "node dist/index.js",
+    "postinstall": "tsc",
+    "watch-node": "nodemon dist/index.js",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master"
+  },
+  "engines": {
+    "node": "16.4.2"
   },
   "devDependencies": {
     "@types/config": "^0.0.41",
