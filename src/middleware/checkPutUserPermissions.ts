@@ -3,6 +3,7 @@ import {PutUserInput} from "../schema/user.schema";
 import requireUserIsAdmin from "./requireUserIsAdmin";
 import {User} from "../model/user.model";
 import {DocumentType} from "@typegoose/typegoose";
+import Role from "../constants/userRoles.constants";
 
 
 const checkPutUserPermissions = (req: Request<PutUserInput['params'], {}, PutUserInput['body']>, res: Response, next: NextFunction) => {
@@ -12,7 +13,7 @@ const checkPutUserPermissions = (req: Request<PutUserInput['params'], {}, PutUse
 
     if (!user) throw new Error('requireAdmin called but no user is authenticated');
     if (roles) return requireUserIsAdmin(req, res, next);
-    if (user._id === id) return next();
+    if (user._id === id || user.roles.includes(Role.ADMIN)) return next();
 
     return res.sendStatus(401);
 }

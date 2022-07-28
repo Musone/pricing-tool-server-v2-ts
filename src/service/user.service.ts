@@ -14,17 +14,11 @@ export async function findUserByEmail(email: string) {
     return UserModel.findOne({email});
 }
 
-// export async function updateUser(userId: string, input: Partial<User>) {
-//     const {roles, email, firstName, lastName, password} = input;
-//     return UserModel.updateOne(
-//         {_id: userId}, {
-//             $addToSet: (roles ? {roles} : {}),
-//             $Set: {
-//                 email:
-//                     {
-//                         $cond: {if: {$allElementsTrue: ['$email']}, then: email}
-//                     }
-//             },
-//         }
-//     )
-// }
+export async function getAllUsers() {
+    return UserModel.find();
+}
+
+export async function deleteUserById(id: string) {
+    return UserModel.deleteOne({_id: id});
+}
+

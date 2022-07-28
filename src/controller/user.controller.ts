@@ -6,15 +6,47 @@ import {
     ResetPasswordInput,
     VerifyUserInput
 } from "../schema/user.schema";
-import {createUser, findUserByEmail, findUserById} from "../service/user.service";
+import {
+    createUser,
+    deleteUserById,
+    findUserByEmail,
+    findUserById,
+    getAllUsers
+} from "../service/user.service";
 import sendEmail from "../utils/mailer";
 import log from "../utils/logger";
 import {nanoid} from "nanoid";
-import UserModel, {User} from "../model/user.model";
+import UserModel, {privateFields, User} from "../model/user.model";
 import {DocumentType} from "@typegoose/typegoose";
 import updateAndAddToObject from "../utils/UpdateAndAddToObject";
 import config from "config";
+import {omit} from "lodash";
+import updateAndReplaceObject from "../utils/UpdateAndReplaceObject";
+import {isNullOrUndefined} from "@typegoose/typegoose/lib/internal/utils";
+import {deleteCounselorByUserId} from "../service/counselor.service";
+import {deleteSessionsByUserId} from "../service/auth.service";
 
+export async function getUsersHandler(req: Request, res: Response) {
+    const id: any = req.query['id'];
+
+    try {
+        let userList = [];
+
+        if (typeof id === 'undefined' || id === null) {
+            userList = await getAllUsers();
+        } else {
+            const user = await findUserById(id);
+            if (user !== null) {
+                userList.push(user);
+            }
+        }
+
+        const userListTransformed = userList.map((user) => omit(user.toJSON(), privateFields));
+        return res.send(userListTransformed);
+    } catch (e: any) {
+        return res.status(500).send(e)
+    }
+}
 
 export async function putUserHandler(req: Request<PutUserInput['params'], {}, PutUserInput['body']>, res: Response) {
     const {id} = req.params;
@@ -23,7 +55,7 @@ export async function putUserHandler(req: Request<PutUserInput['params'], {}, Pu
 
     if (!user) return res.status(400).send('Could not update user');
 
-    updateAndAddToObject(input, user);
+    updateAndReplaceObject(input, user);
 
     try {
         await user.save();
@@ -51,7 +83,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
             from: 'admin@server.com',
             to: user.email,
             subject: 'Phare: Please verify your account',
-            html: `<h3>Verify you email with the url below</h3><a href={verificationLink}>${verificationLink}</a>`,
+            html: `<h3>Verify you email with the url below</h3><a href="${verificationLink}">${verificationLink}</a>`,
         });
 
         return res.send('User successfully created');
@@ -98,11 +130,13 @@ export async function forgotPasswordHandler(req: Request<{}, {}, ForgotPasswordI
 
     await user.save();
 
+    const resetLink = `${clientUrl}/auth/forgotPassword?id=${user._id}&code=${user.passwordResetCode}`;
+
     await sendEmail({
         from: 'admin@server.com',
         to: user.email,
         subject: 'Password reset',
-        text: `${clientUrl}/auth/forgotPassword?id=${user._id}&code=${user.passwordResetCode}`
+        html: `<h3>Reset your password with the url below</h3><a href="${resetLink}">${resetLink}</a>`
     });
 
     return res.send(message);
@@ -127,3 +161,24 @@ export async function resetPasswordHandler(req: Request<ResetPasswordInput['para
 export async function getCurrentUserHandler(req: Request, res: Response) {
     return res.send(res.locals.user);
 }
+
+export async function deleteUserByIdHandler(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (isNullOrUndefined(id)) {
+        return res.status(400).send('id parameter missing')
+    }
+
+    try {
+        await deleteUserById(id);
+        await deleteCounselorByUserId(id);
+        await deleteSessionsByUserId(id);
+    } catch (e: any) {
+        return res.sendStatus(400);
+    }
+
+    return res.send('User successfully deleted');
+}
+
+
+

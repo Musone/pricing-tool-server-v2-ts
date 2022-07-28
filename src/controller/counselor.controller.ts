@@ -12,6 +12,7 @@ import fs from "fs";
 import config from "config";
 import log from "../utils/logger";
 import {isNull} from "lodash";
+import {findUserById} from "../service/user.service";
 
 export async function getMyCounselorProfileHandler(req: Request, res: Response) {
     const user: Partial<DocumentType<User>> = res.locals.user;
@@ -19,6 +20,26 @@ export async function getMyCounselorProfileHandler(req: Request, res: Response) 
 
     if (isNull(counselorProfile)) return res.sendStatus(404);
     return res.send(counselorProfile);
+}
+
+export async function getCounselorByIdHandler(req: Request, res: Response) {
+    const id: string = req.params.id;
+
+    if (isNullOrUndefined(id)) {
+        return res.sendStatus(400);
+    }
+
+    try {
+        const counselorProfile = await findCounselorByUserId(id);
+
+        if (isNullOrUndefined(counselorProfile)) {
+            return res.status(404).send('Couldn\'t find Counselor profile');
+        }
+
+        return res.send(counselorProfile);
+    } catch {
+        return res.sendStatus(500)
+    }
 }
 
 export async function getCounselorsHandler(req: Request, res: Response) {
@@ -33,12 +54,18 @@ export async function getCounselorsHandler(req: Request, res: Response) {
 export async function putCounselorHandler(req: Request<putCounselorInput['params'], {}, putCounselorInput['body']>, res: Response) {
     const user: Partial<DocumentType<User>> = res.locals.user;
     const input = req.body as Partial<Counselor>;
-    const counselorProfile: DocumentType<Counselor> | null = await findCounselorByUserId(user._id);
+    const id = req.params.id;
+    const counselorProfile: DocumentType<Counselor> | null = await findCounselorByUserId(id);
+    const userWhoOwnsProfile: DocumentType<User> | null = await findUserById(id);
+
+    if (isNullOrUndefined(userWhoOwnsProfile)) {
+        return res.status(400).send('User who owns the counselor profile could not be found.');
+    }
 
     if (!counselorProfile) {
-        input.user = user._id;
-        input.firstName = user.firstName;
-        input.lastName = user.lastName;
+        input.user = userWhoOwnsProfile._id;
+        input.firstName = userWhoOwnsProfile.firstName;
+        input.lastName = userWhoOwnsProfile.lastName;
 
         try {
             await createCounselor(input);
@@ -48,8 +75,8 @@ export async function putCounselorHandler(req: Request<putCounselorInput['params
         }
     } else {
         // Todo: this will override counselors trying to change their first name and last name.
-        input.firstName = user.firstName;
-        input.lastName = user.lastName;
+        input.firstName = userWhoOwnsProfile.firstName;
+        input.lastName = userWhoOwnsProfile.lastName;
 
         if (!isNullOrUndefined(counselorProfile.pfp) && !isNullOrUndefined(input.pfp) && input.pfp !== counselorProfile.pfp) {
             const path = config.get('uploadLocation');

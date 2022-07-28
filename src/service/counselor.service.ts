@@ -14,3 +14,7 @@ export async function createCounselor(input: Partial<Counselor>) {
 export async function findCounselorByUserId(userId: string) {
     return CounselorModel.findOne({user: userId});
 }
+
+export async function deleteCounselorByUserId(userId: string) {
+    return CounselorModel.deleteOne({user: userId});
+}

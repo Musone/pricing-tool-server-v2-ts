@@ -58,3 +58,7 @@ export async function findSessionByRefreshToken(refreshToken: string) {
 export async function deleteSessionById(id: string) {
     return SessionModel.deleteOne({_id: id});
 }
+
+export async function deleteSessionsByUserId(id: string) {
+    return SessionModel.deleteMany({user: id});
+}

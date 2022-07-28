@@ -1,6 +1,7 @@
 import express, {Request, NextFunction, Response} from "express";
 import validateResource from "../middleware/validateResource";
 import {
+    getCounselorByIdHandler,
     getCounselorsHandler,
     getMyCounselorProfileHandler,
     putCounselorHandler
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.get('/api/counselors', getCounselorsHandler);
 router.get('/api/counselors/me', requireUser, requireUserIsCounselor, getMyCounselorProfileHandler);
+router.get('/api/counselors/:id', getCounselorByIdHandler);
 router.put('/api/counselors/:id', requireUser, requireUserIsTheCounselorOrAdmin, validateResource(putCounselorSchema), uploadPfp, putCounselorHandler);
 
 export default router;

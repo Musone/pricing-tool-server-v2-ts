@@ -17,6 +17,6 @@ module.exports = {
     accessTokenTTL: '30m',
     refreshTokenTTL: '1y',
     invalidLoginMessage: 'Invalid email or password',
-    clientUrl: 'https://phare-counselor-finding-tool.herokuapp.com',
+    clientUrl: 'http://192.168.1.8:3000',
     uploadLocation: 'uploads/'
 }

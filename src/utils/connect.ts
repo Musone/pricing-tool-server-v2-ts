@@ -4,7 +4,7 @@ import log from "./logger";
 
 export default async function connect() {
     // const dbUri: string = config.get<string>('dbUri');
-    const dbUri: string = "mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority";
+    const dbUri = config.get<string>('dbUri');
 
     try {
         await mongoose.connect(dbUri);
@@ -12,5 +12,4 @@ export default async function connect() {
     } catch (e: any) {
         process.exit(1);
     }
-
 }
