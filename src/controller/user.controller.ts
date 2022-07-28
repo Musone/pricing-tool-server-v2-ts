@@ -177,7 +177,7 @@ export async function deleteUserByIdHandler(req: Request, res: Response) {
         return res.sendStatus(400);
     }
 
-    return res.send('User successfully deleted');
+    return res.send('User successfully deleted.');
 }
 
 
