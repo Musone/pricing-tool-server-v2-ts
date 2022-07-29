@@ -33,10 +33,10 @@ export class User {
     @prop({lowercase: true, required: true, unique: true})
     email: string;
 
-    @prop({required: true, lowercase: true})
+    @prop({required: true, lowercase: true, trim: true})
     firstName: string;
 
-    @prop({required: true, lowercase: true})
+    @prop({required: true, lowercase: true, trim: true})
     lastName: string;
 
     @prop({required: true})

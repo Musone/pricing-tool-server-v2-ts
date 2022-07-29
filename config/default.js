@@ -1,6 +1,6 @@
 module.exports = {
     port: 5000,
-    dbUri: 'mongodb+srv://Musone:4U2N1jDhrmnC4Z8W@pricingtool-cluster.yjalx.mongodb.net/?retryWrites=true&w=majority',
+    dbUri: 'mongodb://localhost:27017/pricing-tool-local',
     smtp: {
         service: 'gmail',
         user: process.env.USER,

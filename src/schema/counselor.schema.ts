@@ -1,12 +1,14 @@
 import {array, number, object, string, TypeOf, optional, null as zNull} from "zod";
 import {union} from "zod";
 import pronounsConstants from "../constants/pronouns.constants";
-import specializationsConstants from "../constants/specializations.constants";
-import approachesConstants from "../constants/approaches.constants";
-import languagesConstants from "../constants/languages.constants";
-import credentialsConstants from "../constants/credentials.constants";
 import genderConstants from "../constants/gender.constants";
 import provincesConstants from "../constants/provinces.constants";
+import {
+    approachFilters,
+    credentialFilters,
+    languageFilters,
+    specializationFilters
+} from "../controller/filters.controller";
 
 // todo: editCounselorSchema
 export const putCounselorSchema = object({
@@ -30,20 +32,20 @@ export const putCounselorSchema = object({
             }).refine((data) => provincesConstants[data.province as keyof typeof provincesConstants]?.includes(data.city)),
             zNull()
         ])),
-        languages: optional(array(string().refine(
-            (data) => languagesConstants.includes(data)
-        ))),
-        specializations: optional(array(string().refine(
-            (data) => specializationsConstants.includes(data)
-        ))),
+        languages: optional(array(string())
+            .transform((data) => data.filter((value => languageFilters.includes(value))))
+        ),
+        specializations: optional(array(string())
+            .transform((data) => data.filter((value => specializationFilters.includes(value))))
+        ),
         specializationDesc: optional(string()),
-        approach: optional(array(string().refine(
-            (data) => approachesConstants.includes(data)
-        ))),
+        approach: optional(array(string())
+            .transform((data) => data.filter((value => approachFilters.includes(value))))
+        ),
         approachDesc: optional(string()),
-        credentials: optional(array(string().refine(
-            (data) => credentialsConstants.includes(data)
-        ))),
+        credentials: optional(array(string())
+            .transform((data) => data.filter((value => credentialFilters.includes(value))))
+        ),
         pfp: optional(string()),
         descriptionLong: optional(string()),
         introduction: optional(string()),
