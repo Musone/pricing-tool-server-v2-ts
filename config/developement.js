@@ -2,7 +2,8 @@ module.exports = {
     port: 5000,
 
     // ~~ Ethermail (fake email) ~~
-    dbUri: 'mongodb://localhost:27017/pricing-tool-local',
+    // dbUri: 'mongodb://localhost:27017/pricing-tool-local',
+    dbUri: 'mongodb+srv://Phare-Dev:XvJ9WmImAMQodvzM@pricing-tool.1nrux4k.mongodb.net/?retryWrites=true&w=majority',
     smtp: {
         service: 'ethermail',
         user: 'ygx6wvan5es3a4rd@ethereal.email',
@@ -25,3 +26,5 @@ module.exports = {
     uploadLocation: 'uploads/',
     something: 'test',
 }
+
+
