@@ -78,13 +78,16 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
 
     try {
         const user = await createUser(body);
-        const verificationLink = `${clientUrl}/auth/verify?id=${user._id}&code=${user.verificationCode}`;
-        await sendEmail({
-            from: 'admin@server.com',
-            to: user.email,
-            subject: 'Phare: Please verify your account',
-            html: `<h3>Verify you email with the url below</h3><a href="${verificationLink}">${verificationLink}</a>`,
-        });
+
+        if (isNullOrUndefined(body.verified)) {
+            const verificationLink = `${clientUrl}/auth/verify?id=${user._id}&code=${user.verificationCode}`;
+            await sendEmail({
+                from: 'admin@server.com',
+                to: user.email,
+                subject: 'Phare: Please verify your account',
+                html: `<h3>Verify you email with the url below</h3><a href="${verificationLink}">${verificationLink}</a>`,
+            });
+        }
 
         return res.send('User successfully created');
     } catch (e: any) {

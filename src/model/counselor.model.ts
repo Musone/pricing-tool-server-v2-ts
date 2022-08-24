@@ -33,6 +33,9 @@ export class Counselor {
     @prop({default: null})
     in_person: {city: string, province: string} | null;
 
+    @prop({default: null})
+    geolocation: {latitude: number, longitude: number, name: string} | null;
+
     @prop({default: []})
     languages: string[];
 

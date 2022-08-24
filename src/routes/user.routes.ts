@@ -18,11 +18,12 @@ import {
 import requireUser from "../middleware/requireUser";
 import checkPutUserPermissions from "../middleware/checkPutUserPermissions";
 import requireUserIsAdmin from "../middleware/requireUserIsAdmin";
+import checkVerificationBypassPermissions from "../middleware/checkVerificationBypassPermissions";
 
 
 const router = express.Router();
 
-router.post('/api/users', validateResource(createUserSchema), createUserHandler);
+router.post('/api/users', validateResource(createUserSchema), checkVerificationBypassPermissions, createUserHandler);
 
 router.post('/api/users/verify/:id/:verificationCode', validateResource(verifyUserSchema), verifyUserHandler);
 

@@ -1,4 +1,4 @@
-import {array, object, optional, string, TypeOf, undefined, union} from "zod";
+import {array, boolean, object, optional, string, TypeOf, undefined, union} from "zod";
 import UserRoles from "../constants/userRoles.constants";
 
 
@@ -18,7 +18,8 @@ export const createUserSchema = object({
         }),
         email: string({
             required_error: 'Email is required'
-        }).email('Not a valid email')
+        }).email('Not a valid email'),
+        verified: optional(boolean()),
     }).refine((data) => data.password === data.passwordConfirmation, {
         message: 'Passwords do not match',
         path: ['passwordConfirmation']

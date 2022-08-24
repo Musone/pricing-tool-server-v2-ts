@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
     ...smtp,
     auth: {user: smtp.user, pass: smtp.pass},
 });
-log.info(`SMTP host:${smtp.host} user:${smtp.host}`);
+log.info(`SMTP host:${smtp.host} user:${smtp.user}`);
 // ~~~~
 
 export default async function sendEmail(payload: SendMailOptions) {

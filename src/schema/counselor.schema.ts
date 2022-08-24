@@ -32,6 +32,9 @@ export const putCounselorSchema = object({
             }).refine((data) => provincesConstants[data.province as keyof typeof provincesConstants]?.includes(data.city)),
             zNull()
         ])),
+
+        geolocation: optional(union([object({latitude: number(), longitude: number(), name: string()}), zNull()])),
+
         languages: optional(array(string())
             .transform((data) => data.filter((value => languageFilters.includes(value))))
         ),

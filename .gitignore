@@ -4,3 +4,7 @@ node_modules
 workflow.md
 testPlayground.ts
 dist
+functions/
+.firebaserc
+.firebase
+firebase.json
