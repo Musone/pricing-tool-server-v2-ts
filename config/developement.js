@@ -23,4 +23,5 @@ module.exports = {
     invalidLoginMessage: 'Invalid email or password',
     clientUrl: 'http://192.168.1.8:3000',
     uploadLocation: 'uploads/',
+    something: 'test',
 }
