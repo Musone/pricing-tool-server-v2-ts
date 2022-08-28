@@ -13,6 +13,23 @@ import {
 import {verifyJwt} from "../utils/jwt";
 import {DocumentType} from "@typegoose/typegoose";
 import {Session} from "../model/session.model";
+import sendVerificationEmail from "../utils/sendVerificationEmail";
+import {User} from "../model/user.model";
+import {isNullOrUndefined} from "@typegoose/typegoose/lib/internal/utils";
+
+
+export async function sendEmailHandler(req: Request<{id: string}, {}, CreateSessionInput>, res: Response) {
+    const clientUrl = config.get<string>('clientUrl');
+    const id = req.params.id;
+    if (!id) res.sendStatus(400);
+
+    const user: DocumentType<User> | null = await findUserById(id);
+    if (isNullOrUndefined(user)) return res.sendStatus(404);
+
+    await sendVerificationEmail(clientUrl, user);
+
+    return res.sendStatus(200);
+}
 
 /**
  * Verifies login credentials and responds with an access token and a refresh token.
@@ -34,7 +51,7 @@ export async function createSessionHandler(req: Request<{}, {}, CreateSessionInp
     const isValid = await user.validatePassword(password);
 
     if (!isValid) return res.status(401).send(invalidMessage);
-    if (!user.verified) return res.status(401).send('Please verify your email');
+    if (!user.verified) return res.status(403).send({id: user._id, message: 'Please verify your email'});
 
     const accessToken = signAccessToken(user);
     const refreshToken = await signRefreshToken(user._id, userAgent);

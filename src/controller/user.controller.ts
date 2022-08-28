@@ -25,6 +25,7 @@ import updateAndReplaceObject from "../utils/UpdateAndReplaceObject";
 import {isNullOrUndefined} from "@typegoose/typegoose/lib/internal/utils";
 import {deleteCounselorByUserId} from "../service/counselor.service";
 import {deleteSessionsByUserId} from "../service/auth.service";
+import sendVerificationEmail from "../utils/sendVerificationEmail";
 
 export async function getUsersHandler(req: Request, res: Response) {
     const id: any = req.query['id'];
@@ -80,13 +81,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
         const user = await createUser(body);
 
         if (isNullOrUndefined(body.verified)) {
-            const verificationLink = `${clientUrl}/auth/verify?id=${user._id}&code=${user.verificationCode}`;
-            await sendEmail({
-                from: 'admin@server.com',
-                to: user.email,
-                subject: 'Phare: Please verify your account',
-                html: `<h3>Verify you email with the url below</h3><a href="${verificationLink}">${verificationLink}</a>`,
-            });
+            await sendVerificationEmail(clientUrl, user);
         }
 
         return res.send('User successfully created');
