@@ -23,7 +23,8 @@ module.exports = {
     accessTokenTTL: '30m',
     refreshTokenTTL: '1y',
     invalidLoginMessage: 'Invalid email or password',
-    clientUrl: 'https://phare-counselor-finding-tool.herokuapp.com',
+    // clientUrl: 'https://phare-counselor-finding-tool.herokuapp.com',
+    clientUrl: 'https://phare-app-6fd56.web.app/',
     uploadLocation: 'uploads/',
     // ~~~~
 }

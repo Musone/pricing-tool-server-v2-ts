@@ -12,7 +12,8 @@
     "postinstall": "yarn build",
     "watch-node": "nodemon dist/app.js",
     "watch-ts": "tsc -w",
-    "deploy": "git add . && git commit -m Heroku && git push heroku master"
+    "deploy": "git add . && git commit -m Heroku && git push heroku master",
+    "push": "git add . && git commit -m \"Auto-Push\" && git push origin master"
   },
   "engines": {
     "node": "16.4.2"
